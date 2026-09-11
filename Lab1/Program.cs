@@ -16,7 +16,7 @@ namespace Labs
                 Environment.Exit(0);
             }
             
-            Console.WriteLine("Input the sequenceses path\n");
+            Console.WriteLine("Input the commands path\n");
             string? commandsPath = Console.ReadLine();
             string[]? commandsLines = File.Exists(commandsPath) ? File.ReadAllLines(commandsPath) : null;
             
@@ -51,9 +51,9 @@ namespace Labs
                 for(int i = 0; i < line.Length; ++i)
                 {
                     int ascI = (int)line[i];
-                    if (i + 1 < line.Length && ascI >= 3 && ascI <= 9 && (int)line[i + 1] >= 65 && (int)line[i + 1] <= 90)
+                    if (i + 1 < line.Length && ascI >= 52 && ascI <= 58 && (int)line[i + 1] >= 65 && (int)line[i + 1] <= 90)
                     {
-                        while(ascI > 0)
+                        while(ascI > 1)
                         {
                             newLine += line[i + 1];
                             --ascI;
