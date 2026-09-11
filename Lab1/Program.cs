@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Text;
 
 namespace Labs
 {
     internal class Program
     {
+        struct GeneticData
+        {
+            public string protein;
+            public string organism;
+            public string amino_acids;
+        }
         static void Main(string[] args)
         {
             Console.WriteLine("Input the sequenceses path\n");
@@ -25,47 +32,30 @@ namespace Labs
                 Console.WriteLine($"File which is by path {commandsPath} is empty, or the path is wrong!");
                 Environment.Exit(0);
             }
-
-            string[] unpackedSequencesLines = UnpackFile(sequencesLines);
-            string[] unpackedCommandsLines = UnpackFile(commandsLines);
-
-            foreach(string sequence in unpackedSequencesLines)
-            {
-                Console.WriteLine(sequence + '\n');
-            }
-            foreach(string command in unpackedCommandsLines)
-            {
-                Console.WriteLine(command + '\n');
-            }
         }
-        static string[] UnpackFile(string[] lines)
+        static string UnpackFile(string line)
         {
-            string[] newLines = new string[lines.Length];
+            StringBuilder newLine = new StringBuilder();
 
-            for(int k = 0; k < lines.Length; ++k)
+            for (int i = 0; i < line.Length; ++i)
             {
-                string line = lines[k];
-
-                string newLine = "";
-
-                for(int i = 0; i < line.Length; ++i)
+                int ascI = (int)line[i];
+                if (i + 1 < line.Length && ascI >= 51 && ascI <= 57 && (int)line[i + 1] >= 65 && (int)line[i + 1] <= 90)
                 {
-                    int ascI = (int)line[i];
-                    if (i + 1 < line.Length && ascI >= 52 && ascI <= 58 && (int)line[i + 1] >= 65 && (int)line[i + 1] <= 90)
+                    int count = ascI - 48;
+                    for (int j = 0; j < count; j++)
                     {
-                        while(ascI > 1)
-                        {
-                            newLine += line[i + 1];
-                            --ascI;
-                        }
+                        newLine.Append(line[i + 1]);
                     }
-                    else newLine += line[i];
+                    i++;
                 }
-
-                newLines[k] = newLine;
+                else
+                {
+                    newLine.Append(line[i]);
+                }
             }
 
-            return newLines;
+            return newLine.ToString();
         }
     }
 }
