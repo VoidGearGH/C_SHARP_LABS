@@ -32,6 +32,60 @@ namespace Labs
                 Console.WriteLine($"File which is by path {commandsPath} is empty, or the path is wrong!");
                 Environment.Exit(0);
             }
+
+            List<GeneticData> proteins = new List<GeneticData>();
+            foreach (string line in sequencesLines)
+            {
+                string[] parts = line.Split('\t');
+                if (parts.Length == 3)
+                {
+                    GeneticData data = new GeneticData();
+                    data.protein = parts[0];
+                    data.organism = parts[1];
+                    data.amino_acids = UnpackFile(parts[2]);
+                    proteins.Add(data);
+                }
+            }
+
+            using (StreamWriter writer = new StreamWriter("genedata.txt"))
+            {
+                writer.WriteLine("Иванов И.И.");
+                writer.WriteLine("Генетический поиск");
+
+                int operationNumber = 1;
+                foreach (string line in commandsLines)
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    string[] parts = line.Split('\t');
+                    if (parts.Length < 2) continue;
+
+                    string command = parts[0].Trim();
+                    string param1 = UnpackFile(parts[1].Trim());
+                    string param2 = parts.Length > 2 ? UnpackFile(parts[2].Trim()) : "";
+
+                    string header = $"{operationNumber:D3} {command} {param1}";
+                    if (command == "diff") header += $" {param2}";
+
+                    writer.WriteLine(header);
+                    writer.WriteLine(new string('-', header.Length));
+
+                    switch (command)
+                    {
+                        case "search":
+                            ExecuteSearch(writer, proteins, param1);
+                            break;
+                        case "diff":
+                            ExecuteDiff(writer, proteins, param1, param2);
+                            break;
+                        case "mode":
+                            ExecuteMode(writer, proteins, param1);
+                            break;
+                    }
+                    operationNumber++;
+                }
+            }
+            Console.WriteLine("Done! Results saved to genedata.txt");
         }
         static string UnpackFile(string line)
         {
