@@ -5,7 +5,7 @@ namespace Labs
 {
     internal class Program
     {
-        struct GeneticData
+        class GeneticData
         {
             public string protein;
             public string organism;
