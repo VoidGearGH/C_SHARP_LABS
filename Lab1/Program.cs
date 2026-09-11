@@ -132,8 +132,8 @@ namespace Labs
 
         static void ExecuteDiff(StreamWriter writer, List<GeneticData> proteins, string protein1, string protein2)
         {
-            GeneticData? p1 = proteins.FirstOrDefault(p => p.protein == protein1);
-            GeneticData? p2 = proteins.FirstOrDefault(p => p.protein == protein2);
+            GeneticData p1 = proteins.FirstOrDefault(p => p.protein == protein1);
+            GeneticData p2 = proteins.FirstOrDefault(p => p.protein == protein2);
 
             if (p1 == null && p2 == null)
             {
@@ -144,12 +144,12 @@ namespace Labs
             if (p2 == null) { writer.WriteLine($"MISSING: {protein2}"); return; }
 
             int diffCount = 0;
-            int minLength = Math.Min(p1.Value.amino_acids.Length, p2.Value.amino_acids.Length);
-            int maxLength = Math.Max(p1.Value.amino_acids.Length, p2.Value.amino_acids.Length);
+            int minLength = Math.Min(p1.amino_acids.Length, p2.amino_acids.Length);
+            int maxLength = Math.Max(p1.amino_acids.Length, p2.amino_acids.Length);
 
             for (int i = 0; i < minLength; i++)
             {
-                if (p1.Value.amino_acids[i] != p2.Value.amino_acids[i])
+                if (p1.amino_acids[i] != p2.amino_acids[i])
                 {
                     diffCount++;
                 }
@@ -161,7 +161,7 @@ namespace Labs
 
         static void ExecuteMode(StreamWriter writer, List<GeneticData> proteins, string proteinName)
         {
-            GeneticData? p = proteins.FirstOrDefault(p => p.protein == proteinName);
+            GeneticData p = proteins.FirstOrDefault(p => p.protein == proteinName);
             if (p == null)
             {
                 writer.WriteLine($"MISSING: {proteinName}");
@@ -169,7 +169,7 @@ namespace Labs
             }
 
             Dictionary<char, int> counts = new Dictionary<char, int>();
-            foreach (char c in p.Value.amino_acids)
+            foreach (char c in p.amino_acids)
             {
                 if (counts.ContainsKey(c)) counts[c]++;
                 else counts[c] = 1;
