@@ -28,6 +28,15 @@ namespace Labs
 
             string[] unpackedSequencesLines = UnpackFile(sequencesLines);
             string[] unpackedCommandsLines = UnpackFile(commandsLines);
+
+            foreach(string sequence in unpackedSequencesLines)
+            {
+                Console.WriteLine(sequence + '\n');
+            }
+            foreach(string command in unpackedCommandsLines)
+            {
+                Console.WriteLine(command + '\n');
+            }
         }
         static string[] UnpackFile(string[] lines)
         {
