@@ -1,48 +1,47 @@
 ﻿using System;
 using System.Text;
 
-namespace Labs
+namespace Lab1
 {
     internal class Program
     {
         class GeneticData
         {
-            public string protein;
-            public string organism;
-            public string amino_acids;
+            public string protein = "";
+            public string organism = "";
+            public string amino_acids = "";
         }
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Input the sequenceses path\n");
-            string? sequencesPath = Console.ReadLine();
-            string[]? sequencesLines = File.Exists(sequencesPath) ? File.ReadAllLines(sequencesPath) : null;
-            
-            if(sequencesLines == null || !File.Exists(sequencesPath))
-            {
-                Console.WriteLine($"File which is by path {sequencesPath} is empty, or the path is wrong!");
-                Environment.Exit(0);
-            }
-            
-            Console.WriteLine("Input the commands path\n");
-            string? commandsPath = Console.ReadLine();
-            string[]? commandsLines = File.Exists(commandsPath) ? File.ReadAllLines(commandsPath) : null;
-            
-            if(commandsLines == null || !File.Exists(commandsPath))
-            {
-                Console.WriteLine($"File which is by path {commandsPath} is empty, or the path is wrong!");
-                Environment.Exit(0);
-            }
 
-            List<GeneticData> proteins = new List<GeneticData>();
+        static void InputFile(string name, out string[] nameLines)
+        {
+            Console.WriteLine($"Input the {name} path\n");
+            string? path = Console.ReadLine();
+            nameLines = File.Exists(path) ? File.ReadAllLines(path) : null!;
+
+            if (nameLines == null || !File.Exists(path))
+            {
+                Console.WriteLine($"File which is by path {path} is empty, or the path is wrong!");
+                Environment.Exit(0);
+            }
+        }
+
+        static void Main()
+        {
+            InputFile("sequences", out string[] sequencesLines);
+            InputFile("commands", out string[] commandsLines);
+
+            List<GeneticData> proteins = new();
             foreach (string line in sequencesLines)
             {
                 string[] parts = line.Split('\t');
                 if (parts.Length == 3)
                 {
-                    GeneticData data = new GeneticData();
-                    data.protein = parts[0];
-                    data.organism = parts[1];
-                    data.amino_acids = UnpackFile(parts[2]);
+                    GeneticData data = new()
+                    {
+                        protein = parts[0],
+                        organism = parts[1],
+                        amino_acids = UnpackFile(parts[2])
+                    };
                     proteins.Add(data);
                 }
             }
@@ -87,9 +86,10 @@ namespace Labs
             }
             Console.WriteLine("Done! Results saved to genedata.txt");
         }
+
         static string UnpackFile(string line)
         {
-            StringBuilder newLine = new StringBuilder();
+            StringBuilder newLine = new();
 
             for (int i = 0; i < line.Length; ++i)
             {
@@ -132,8 +132,8 @@ namespace Labs
 
         static void ExecuteDiff(StreamWriter writer, List<GeneticData> proteins, string protein1, string protein2)
         {
-            GeneticData p1 = proteins.FirstOrDefault(p => p.protein == protein1);
-            GeneticData p2 = proteins.FirstOrDefault(p => p.protein == protein2);
+            GeneticData? p1 = proteins.FirstOrDefault(p => p.protein == protein1);
+            GeneticData? p2 = proteins.FirstOrDefault(p => p.protein == protein2);
 
             if (p1 == null && p2 == null)
             {
@@ -161,18 +161,20 @@ namespace Labs
 
         static void ExecuteMode(StreamWriter writer, List<GeneticData> proteins, string proteinName)
         {
-            GeneticData p = proteins.FirstOrDefault(p => p.protein == proteinName);
+            GeneticData? p = proteins.FirstOrDefault(p => p.protein == proteinName);
             if (p == null)
             {
                 writer.WriteLine($"MISSING: {proteinName}");
                 return;
             }
 
-            Dictionary<char, int> counts = new Dictionary<char, int>();
+            Dictionary<char, int> counts = new();
             foreach (char c in p.amino_acids)
             {
-                if (counts.ContainsKey(c)) counts[c]++;
-                else counts[c] = 1;
+                if (counts.TryGetValue(c, out int value))
+                    counts[c] = value + 1;
+                else
+                    counts[c] = 1;
             }
 
             int maxCount = 0;
