@@ -193,32 +193,5 @@ namespace Labs
 
             writer.WriteLine($"amino-acid occurs: {bestChar} {maxCount}");
         }
-
-        static string RLEncoding(string amino_acids)
-        {
-            if (string.IsNullOrEmpty(amino_acids)) return amino_acids;
-            StringBuilder sb = new StringBuilder();
-            int count = 1;
-            char current = amino_acids[0];
-
-            for (int i = 1; i < amino_acids.Length; i++)
-            {
-                if (amino_acids[i] == current)
-                {
-                    count++;
-                }
-                else
-                {
-                    if (count >= 3) sb.Append(count);
-                    sb.Append(current);
-                    current = amino_acids[i];
-                    count = 1;
-                }
-            }
-            if (count >= 3) sb.Append(count);
-            sb.Append(current);
-
-            return sb.ToString();
-        }
     }
 }
