@@ -171,9 +171,16 @@ namespace Lab2
         {
             string catStr = _cat.State == PlayerState.NotInGame ? "??" : _cat.Location.ToString();
             string mouseStr = _mouse.State == PlayerState.NotInGame ? "??" : _mouse.Location.ToString();
-            string distStr = (_cat.State == PlayerState.NotInGame || _mouse.State == PlayerState.NotInGame) ? "??" : GetDistance().ToString();
 
-            output.Add($"{catStr} {mouseStr} {distStr}");
+            if (_cat.State == PlayerState.NotInGame || _mouse.State == PlayerState.NotInGame)
+            {
+                output.Add($"{catStr} {mouseStr}");
+            }
+            else
+            {
+                string distStr = GetDistance().ToString();
+                output.Add($"{catStr} {mouseStr} {distStr}");
+            }
         }
 
         private int GetDistance()
@@ -186,7 +193,7 @@ namespace Lab2
     {
         static void Main()
         {
-            Game.InputPath = @"1.ChaseData.txt";
+            Game.InputPath = @"C:\Users\User\Documents\C_SHARP_LABS\Lab2\1.ChaseData.txt";
             Game.OutputPath = @"1.PursuitLog.txt";
 
             Game game = new Game(16);
