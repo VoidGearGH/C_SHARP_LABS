@@ -4,9 +4,29 @@ namespace Lab3
 {
     internal class Program
     {
-        static void Main()
+        class Word
         {
 
+        }
+        class Punctuation
+        {
+
+        }
+        class Sentence
+        {
+
+        }
+        class Text
+        {
+
+        }
+        class Parser
+        {
+
+        }
+        static void Main()
+        {
+            
         }
     }
 }
