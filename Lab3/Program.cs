@@ -18,7 +18,7 @@ namespace Lab3
     {
         [XmlIgnore]
         public string Value { get; set; }
-        
+
         [XmlIgnore]
         public StringBuilder Sb { get; set; }
 
@@ -77,6 +77,7 @@ namespace Lab3
         [XmlIgnore]
         public bool IsInterrogative => Tokens.OfType<Punctuation>().Any(p => p.Value.Contains("?"));
     }
+
     public class Text : ExpressionSet<Text>
     {
         [XmlIgnore]
@@ -178,10 +179,51 @@ namespace Lab3
 
         public void ExportToXml(string filePath)
         {
-            var serializer = new XmlSerializer(typeof(Text));
+            var xmlText = new XmlText
+            {
+                Sentences = Sentences.Select(s => new XmlSentence
+                {
+                    Text = s.ToString(),
+                    WordCount = s.WordCount,
+                    Length = s.Length,
+                    IsInterrogative = s.IsInterrogative,
+                    Words = s.Tokens.OfType<Word>().Select(w => w.Value).ToList()
+                }).ToList()
+            };
+
+            var serializer = new XmlSerializer(typeof(XmlText));
             using var writer = new StreamWriter(filePath, false, Encoding.UTF8);
-            serializer.Serialize(writer, this);
+            serializer.Serialize(writer, xmlText);
         }
+    }
+
+    [Serializable]
+    [XmlRoot("Text")]
+    public class XmlText
+    {
+        [XmlArray("Sentences")]
+        [XmlArrayItem("Sentence")]
+        public List<XmlSentence> Sentences { get; set; } = new();
+    }
+
+    [Serializable]
+    public class XmlSentence
+    {
+        [XmlAttribute("Text")]
+        public string Text { get; set; }
+
+        [XmlAttribute("WordCount")]
+        public int WordCount { get; set; }
+
+        [XmlAttribute("Length")]
+        public int Length { get; set; }
+
+        [XmlAttribute("IsInterrogative")]
+        public bool IsInterrogative { get; set; }
+
+        [XmlArray("Words")]
+        [XmlArrayItem("Word")]
+        public List<string> Words { get; set; } = new();
     }
 
     public class ExpressionsCollector
@@ -368,7 +410,6 @@ namespace Lab3
 
     internal class Program
     {
-        
         static void Main()
         {
             new Menu().Start();
