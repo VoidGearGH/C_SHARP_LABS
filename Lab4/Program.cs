@@ -207,11 +207,11 @@ namespace Lab3
             }
 
             Console.WriteLine("Concordance:");
-            foreach (var kvp in concordance)
+            foreach (var el in concordance)
             {
-                string word = kvp.Key;
-                int count = kvp.Value.TotalCount;
-                string lines = string.Join(" ", kvp.Value.LineNumbers);
+                string word = el.Key;
+                int count = el.Value.TotalCount;
+                string lines = string.Join(" ", el.Value.LineNumbers);
                 Console.WriteLine($"{word.PadRight(30, '.')}{count}: {lines}");
             }
             Console.WriteLine("\n");
