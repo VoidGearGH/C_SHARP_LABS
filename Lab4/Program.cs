@@ -78,6 +78,12 @@ namespace Lab3
         public bool IsInterrogative => Tokens.OfType<Punctuation>().Any(p => p.Value.Contains("?"));
     }
 
+    public class ConcordanceEntry
+    {
+        public int TotalCount { get; set; }
+        public SortedSet<int> LineNumbers { get; set; } = new SortedSet<int>();
+    }
+
     public class Text : ExpressionSet<Text>
     {
         [XmlIgnore]
@@ -175,6 +181,40 @@ namespace Lab3
                     sentence.Sb.Append(token.Value);
                 }
             }
+        }
+
+        public void BuildAndPrintConcordance()
+        {
+            var concordance = new SortedDictionary<string, ConcordanceEntry>(StringComparer.OrdinalIgnoreCase);
+            int lineNumber = 1;
+
+            foreach (var sentence in Sentences)
+            {
+                foreach (var token in sentence.Tokens)
+                {
+                    if (token is Word word)
+                    {
+                        string key = word.Value.ToLower();
+                        if (!concordance.ContainsKey(key))
+                        {
+                            concordance[key] = new ConcordanceEntry();
+                        }
+                        concordance[key].TotalCount++;
+                        concordance[key].LineNumbers.Add(lineNumber);
+                    }
+                }
+                lineNumber++;
+            }
+
+            Console.WriteLine("Concordance:");
+            foreach (var kvp in concordance)
+            {
+                string word = kvp.Key;
+                int count = kvp.Value.TotalCount;
+                string lines = string.Join(" ", kvp.Value.LineNumbers);
+                Console.WriteLine($"{word.PadRight(30, '.')}{count}: {lines}");
+            }
+            Console.WriteLine("\n");
         }
 
         public void ExportToXml(string filePath)
@@ -321,6 +361,7 @@ namespace Lab3
                 Console.WriteLine("5. Replace words of given length in a specific sentence");
                 Console.WriteLine("6. Remove stop words (RU and EN)");
                 Console.WriteLine("7. Export to XML");
+                Console.WriteLine("8. Build and print concordance");
                 Console.WriteLine("0. Exit");
                 Console.Write("Choose an option: ");
 
@@ -382,6 +423,9 @@ namespace Lab3
                         string xmlPath = Console.ReadLine();
                         text.ExportToXml(xmlPath);
                         Console.WriteLine("Exported to XML successfully.");
+                        break;
+                    case "8":
+                        text.BuildAndPrintConcordance();
                         break;
                     case "0":
                         isRunning = false;
