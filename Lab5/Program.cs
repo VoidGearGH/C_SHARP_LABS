@@ -31,6 +31,15 @@ public class PassengerTrain
         if (carriage == null)
             return OperationResult.Failure("Wrong type");
 
+        carriage.ComfortLevel = cType switch
+        {
+            CarriageType.Compartment => Comfort.Basic,
+            CarriageType.Open_Sleeper => Comfort.Basic,
+            CarriageType.SV => Comfort.Comfort,
+            CarriageType.Luxury => Comfort.Luxury,
+            _ => Comfort.Basic
+        };
+
         _carriages.Add(carriage);
         return OperationResult.Success();
     }
@@ -130,9 +139,41 @@ public class Interaction
 {
     public void Start()
     {
-        var locomotive = new Locomotive("ЭП20", 120m, 7200m);
+        var locomotive = new Locomotive("Локомотив", 120m, 7200m);
         var train = new PassengerTrain(locomotive);
-        train.AddCarriage(CarriageType.Compartment, "Купейный 1", 50m, 36, 15, 200m);
+
+        AddCarriageToTrain(train, CarriageType.Compartment, "Купейный №1", 50m, 36, 15, 200m);
+        AddCarriageToTrain(train, CarriageType.Open_Sleeper, "Плацкарт №1", 55m, 54, 45, 300m);
+        AddCarriageToTrain(train, CarriageType.SV, "СВ №1", 60m, 18, 8, 150m);
+        AddCarriageToTrain(train, CarriageType.Luxury, "Люкс №1", 65m, 12, 4, 100m);
+        AddCarriageToTrain(train, CarriageType.Compartment, "Купейный №2", 50m, 36, 25, 250m);
+
+        Console.WriteLine($"Всего пассажиров: {train.CountPassengers()}");
+        Console.WriteLine($"Всего багажа: {train.CountBaggage()} кг\n");
+
+        Console.WriteLine("Вагоны с количеством пассажиров [от 10 до 30]");
+        var filtered = train.GetCarriagesByRange(10, 30);
+        foreach (var c in filtered)
+        {
+            Console.WriteLine($"  {c.Name}: {c.NumberOfPassengers} пасс., комфорт: {c.ComfortLevel}");
+        }
+        Console.WriteLine();
+
+        Console.WriteLine("После сортировки по уровню комфорта");
+        train.SortCarriagesByComfort();
+        foreach (var c in train.GetCarriagesByRange(0, 100))
+        {
+            Console.WriteLine($"  {c.Name} ({c.ComfortLevel}): {c.NumberOfPassengers} пасс.");
+        }
+    }
+
+    private void AddCarriageToTrain(PassengerTrain train, CarriageType type, string name, decimal mass, int capacity, int passengers, decimal baggage)
+    {
+        var result = train.AddCarriage(type, name, mass, capacity, passengers, baggage);
+        if (!result.IsSuccess)
+        {
+            Console.WriteLine($"Ошибка добавления вагона {name}: {result.ErrorMessage}");
+        }
     }
 }
 
