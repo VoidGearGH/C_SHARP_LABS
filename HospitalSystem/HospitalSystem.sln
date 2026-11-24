@@ -16,6 +16,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hospital.Services", "Hospit
 		{B50957BD-C27E-4DF7-BC03-5C47CE9D0580} = {B50957BD-C27E-4DF7-BC03-5C47CE9D0580}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hospital.Presentation", "Hospital.Presentation\Hospital.Presentation.csproj", "{2B039E95-B401-4219-82DE-E8486BF92D4C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1798BD90-C8AC-403E-BA8D-6018540DDF18} = {1798BD90-C8AC-403E-BA8D-6018540DDF18}
+		{B50957BD-C27E-4DF7-BC03-5C47CE9D0580} = {B50957BD-C27E-4DF7-BC03-5C47CE9D0580}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +40,10 @@ Global
 		{1798BD90-C8AC-403E-BA8D-6018540DDF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1798BD90-C8AC-403E-BA8D-6018540DDF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1798BD90-C8AC-403E-BA8D-6018540DDF18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B039E95-B401-4219-82DE-E8486BF92D4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B039E95-B401-4219-82DE-E8486BF92D4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B039E95-B401-4219-82DE-E8486BF92D4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B039E95-B401-4219-82DE-E8486BF92D4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
